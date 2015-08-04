@@ -8,9 +8,5 @@ This app consist of the following features:
 Files
 1. salah.html - this is for testing purposes only
 2. salahtimes.js - this is the main file with comments and formatted
-3. salahtimes-min.js - minified version of the JS file. No comments
+3. salahtimes-min.js - minified version of the JS file w/o comments
 4. README.md - this file.
-
-#TODO#
-1. Update salah timetable daily without refreshing page
-2. Modularize code
