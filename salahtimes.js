@@ -29,9 +29,9 @@ var nextSalahIn = function (PT) {
 	PT[1]['SunriseI'] = PT[1]['Sunrise'];
 	for (i = 1; i < 3; i += 1) {
 		for (j in times) {
-			if (((z = (y = Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j] + 'I'])) + timeBuffer) - Date.now() ) > 0) {
+			if (((z = (y = Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j] + 'I'])) + timeBuffer) - Date.now()) > 0) {
 				// if the aqama time + buffer is greater than current time THEN send that salah time to counter
-				return timeLeft(Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j]]), y, z, times[j], parseInt(i+j,10));
+				return timeLeft(Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j]]), y, z, times[j], parseInt(i + j, 10));
 			}
 		}
 	}
@@ -54,29 +54,25 @@ function timeLeft(t1, t2, t3, n, d) {
 	msg = jQuery('.nextSalahIn');
 	countdown = setInterval(function () {
 		ct = Date.now();
-		msg.html(((sec = t1 - ct) > 0) ? n + ' in: ' + countDown(sec) : ((secI = t2 - ct) > 0) ? '<b>'+n+' iqama</b> in: ' + countDown(secI) : ((stp = t3 - ct) >= 0) ? m : '');
+		msg.html(((sec = t1 - ct) > 0) ? n + ' in: ' + countDown(sec) : ((secI = t2 - ct) > 0) ? '<b>' + n + ' iqama</b> in: ' + countDown(secI) : ((stp = t3 - ct) >= 0) ? m : '');
 		if (stp < 0) {
 			clearInterval(countdown);
-			nextSalahIn(PT);			
+			nextSalahIn(PT);
 		}
 	}, 1000);
 	// console.log(d);
-	if(d === 21) { // CONCAT i&j instead of adding.
+	if (d === 21) { // CONCAT i&j instead of adding.
 		init(); // get new day's time!
 	}
 }
-var init = function(){
+var init = function () {
 	var khateeb = "TBD", todayDate = new Date();
 	yesterDate.setDate(todayDate.getDate() - 1);
 	tomorrDate.setDate(todayDate.getDate() + 1);
 	jumuahDate.setDate(todayDate.getDate() + ((todayDate.getDay() < 6) ? (5 - todayDate.getDay()) : 6));
-	
-//	console.log('Now: ' + todayDate);
-//	console.log('Jumuah: ' + jumuahDate);
-
-	var yqlURL_khateeb = "https://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20csv%20WHERE%20url%3D'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc%26single%3Dtrue%26gid%3D1%26output%3Dcsv'%20AND%20columns%3D'Day%2CDate%2CKhateeb'%20AND%20Date%3D'" + printDate(jumuahDate) + "'%20%7C%20truncate(count%3D1)&format=json&callback=";
-	var csvURL = 'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D' + '0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc' + '%26single%3Dtrue%26gid%3D0%26output%3Dcsv';
-	var yqlURL = "http://query.yahooapis.com/v1/public/yql?q=" +
+	var yqlURL_khateeb = "https://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20csv%20WHERE%20url%3D'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc%26single%3Dtrue%26gid%3D1%26output%3Dcsv'%20AND%20columns%3D'Day%2CDate%2CKhateeb'%20AND%20Date%3D'" + printDate(jumuahDate) + "'%20%7C%20truncate(count%3D1)&format=json&callback=",
+	csvURL = 'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D' + '0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc' + '%26single%3Dtrue%26gid%3D0%26output%3Dcsv',
+	yqlURL = "http://query.yahooapis.com/v1/public/yql?q=" +
 		"SELECT%20*%20FROM%20csv%20WHERE%20url%3D'" + csvURL +
 		"'%20AND%20columns%3D'SalahDate%2CFajr%2CFajrI%2CSunrise%2CDhuhr%2CDhuhrI%2CAsr%2CAsrI%2CMaghrib%2CMaghribI%2CIsha%2CIshaI'" +
 		"%20AND%20(SalahDate%20%3D%20'" + printDate(yesterDate) +
@@ -87,12 +83,12 @@ var init = function(){
 	var salahRow = function (salahDate, salahtime) {
 		return (Date.parse(todayDate) > (Date.parse(salahDate + ' ' + salahtime) + timeBuffer)) ? 2 : 1;
 	};
-	
-	$.getJSON(yqlURL_khateeb, function (msg) {
+
+	jQuery.getJSON(yqlURL_khateeb, function (msg) {
 		khateeb = msg.query.results.row.Khateeb || khateeb;
-		$('div.khateeb').text(khateeb);
+		jQuery('div.khateeb').text(khateeb);
 	});
-	$.getJSON(yqlURL, function (msg) {
+	jQuery.getJSON(yqlURL, function (msg) {
 		var html,
 			salahDate,
 			fajr,
@@ -165,12 +161,12 @@ PT = [
 			'<tr><td class="timeofday">Isha</td><td>' + tr(PT[isha]['Isha']) + '</td><td class="iqtime' + dateChange(PT[isha - 1]['IshaI'], PT[isha]['IshaI']) + '">' + tr(PT[isha]['IshaI']) + '</td></tr>' +
 			'<tr><td class="timeofday">Jumuah</td><td>1:45</td><td>&nbsp</td></tr>' +
 			'<tr><td class="timeofday">Khateeb</td><td colspan="2"><div class="khateeb">' + khateeb + '</div></td></tr>';
-		$('div.timing').html('<center><div class="nextSalahIn" id="nextSalahIn"></div></center><center><table id="salahtimes">' + html + '</table></center>');
-		nextSalahIn(PT);	
-	});		
+		jQuery('div.timing').html('<center><div class="nextSalahIn" id="nextSalahIn"></div></center><center><table id="salahtimes">' + html + '</table></center>');
+		nextSalahIn(PT);
+	});
 };
 (function ($) {
-	$('div.timing').html('<center><div id="salahtimes">Loading prayer times...</div></center>');
+	$('div.timing').html('<div id="salahtimes">Loading prayer times...</div>');
 	init();
 }
 	(jQuery));
