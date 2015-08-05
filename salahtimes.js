@@ -66,25 +66,30 @@ var init = function () {
 	yesterDate.setDate(todayDate.getDate() - 1);
 	tomorrDate.setDate(todayDate.getDate() + 1);
 	jumuahDate.setDate(todayDate.getDate() + ((todayDate.getDay() < 6) ? (5 - todayDate.getDay()) : 6));
-	var yqlURL_khateeb = "https://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20csv%20WHERE%20url%3D'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc%26single%3Dtrue%26gid%3D1%26output%3Dcsv'%20AND%20columns%3D'Day%2CDate%2CKhateeb'%20AND%20Date%3D'" + printDate(jumuahDate) + "'%20%7C%20truncate(count%3D1)&format=json&callback=",
-	csvURL = 'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D' + '0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc' + '%26single%3Dtrue%26gid%3D0%26output%3Dcsv',
-	yqlURL = "http://query.yahooapis.com/v1/public/yql?q=" +
-		"SELECT%20*%20FROM%20csv%20WHERE%20url%3D'" + csvURL +
+	// CSV URL still need sheet # defined. Those are added into yqlURL_ variables soon after csvURL variable.
+	var csvURL = 'https%3A%2F%2Fdocs.google.com%2Fspreadsheet%2Fpub%3Fkey%3D' + '0Al2IwKKfRN4ddDlHNWYxVjcwNWtYQUoza3RWVDBTQnc' + '%26single%3Dtrue%26output%3Dcsv%26gid%3D',
+	yqlURL_khateeb = "https://query.yahooapis.com/v1/public/yql?q="+
+		"SELECT%20*%20FROM%20csv%20WHERE%20url%3D'" + csvURL + "1" +
+		"'%20AND%20columns%3D'Day%2CDate%2CKhateeb'%20AND%20Date%3D'" + printDate(jumuahDate) +
+		"'%20%7C%20truncate(count%3D1)&format=json&callback=",
+	yqlURL_timetbl = "http://query.yahooapis.com/v1/public/yql?q=" +
+		"SELECT%20*%20FROM%20csv%20WHERE%20url%3D'" + csvURL + "0" +
 		"'%20AND%20columns%3D'SalahDate%2CFajr%2CFajrI%2CSunrise%2CDhuhr%2CDhuhrI%2CAsr%2CAsrI%2CMaghrib%2CMaghribI%2CIsha%2CIshaI'" +
 		"%20AND%20(SalahDate%20%3D%20'" + printDate(yesterDate) +
 		"'%20OR%20SalahDate%20%3D%20'" + printDate(todayDate) +
 		"'%20OR%20SalahDate%20%3D%20'" + printDate(tomorrDate) + "')" +
 		"%20%7C%20truncate(count%3D3)&format=json&callback=?";
 
+	// Returns whether to select time from today's or tomorrow's row.
 	var salahRow = function (salahDate, salahtime) {
-		return (Date.parse(todayDate) > (Date.parse(salahDate + ' ' + salahtime) + timeBuffer)) ? 2 : 1;
+		return (Date.parse(todayDate) >= (Date.parse(salahDate + ' ' + salahtime) + timeBuffer)) ? 2 : 1;
 	};
 
 	jQuery.getJSON(yqlURL_khateeb, function (msg) {
 		khateeb = msg.query.results.row.Khateeb || khateeb;
 		jQuery('div.khateeb').text(khateeb);
 	});
-	jQuery.getJSON(yqlURL, function (msg) {
+	jQuery.getJSON(yqlURL_timetbl, function (msg) {
 		var html,
 			salahDate,
 			fajr,
@@ -120,9 +125,9 @@ PT = [
 		Fajr: "12:10 AM",
 		FajrI: "12:14 AM",
 		Isha: "8:00 PM",
-		IshaI: "9:06 PM",
+		IshaI: "11:43 PM",
 		Maghrib: "8:27 PM",
-		MaghribI: "9:05 PM",
+		MaghribI: "11:42 PM",
 		SalahDate: "8/4/2015",
 		Sunrise: "6:41 AM"
 	},
@@ -157,8 +162,10 @@ PT = [
 			'<tr><td class="timeofday">Isha</td><td>' 		+ tr(PT[isha]['Isha']) 			+ '</td><td class="iqtime' 		+ dateChange(PT[isha - 1]['IshaI'], PT[isha]['IshaI']) + '">' 	+ tr(PT[isha]['IshaI']) + '</td></tr>' +
 			'<tr><td class="timeofday">Jumuah</td><td>1:45</td><td>&nbsp</td></tr>' +
 			'<tr><td class="timeofday">Khateeb</td><td colspan="2"><div class="khateeb">' + khateeb + '</div></td></tr>';
-		jQuery('div.timing').html('<div class="nextSalahIn" id="nextSalahIn"></div><table id="salahtimes">' + html + '</table>');
+		jQuery('div.timing').html('<center><div class="nextSalahIn" id="nextSalahIn"></div><table id="salahtimes">' + html + '</table></center>');
 		nextSalahIn(PT);
+	}).fail(function(){
+		jQuery('div.timing').html('An error occurred retrieving salah times.');
 	});
 };
 (function ($) {
