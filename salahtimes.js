@@ -62,7 +62,7 @@ function timeLeft(t1, t2, t3, n) {
 	}, 1000);
 }
 var init = function () {
-	var PT, khateeb = 'TBD', todayDate = new Date();console.log(todayDate);
+	var PT, khateeb = 'TBD', todayDate = new Date();
 	yesterDate.setDate(todayDate.getDate() - 1);
 	tomorrDate.setDate(todayDate.getDate() + 1);
 	jumuahDate.setDate(todayDate.getDate() + ((todayDate.getDay() < 6) ? (5 - todayDate.getDay()) : 6));
