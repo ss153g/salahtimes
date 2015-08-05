@@ -1,5 +1,5 @@
 'use strict';
-var PT, yesterDate = new Date(), tomorrDate = new Date(), jumuahDate = new Date(), timeBuffer = 900000;
+var yesterDate = new Date(), tomorrDate = new Date(), jumuahDate = new Date(), timeBuffer = 900000;
 var printDate = function (dateprint) {
 	return (dateprint.getMonth() + 1) + '/' + dateprint.getDate() + '/' + dateprint.getFullYear();
 };
@@ -31,7 +31,7 @@ var nextSalahIn = function (PT) {
 		for (j in times) {
 			if (((z = (y = Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j] + 'I'])) + timeBuffer) - Date.now()) > 0) {
 				// if the aqama time + buffer is greater than current time THEN send that salah time to counter
-				return timeLeft(Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j]]), y, z, times[j], parseInt(i + j, 10));
+				return timeLeft(Date.parse(PT[i]['SalahDate'] + ' ' + PT[i][times[j]]), y, z, times[j]);
 			}
 		}
 	}
@@ -42,7 +42,7 @@ var nextSalahIn = function (PT) {
 	t3: iqama + time buffer
 	n:  salah name
 */
-function timeLeft(t1, t2, t3, n, d) {
+function timeLeft(t1, t2, t3, n) {
 	var stp = 0,
 		sec = 0,
 		secI = 0,
@@ -57,16 +57,12 @@ function timeLeft(t1, t2, t3, n, d) {
 		msg.html(((sec = t1 - ct) > 0) ? n + ' in: ' + countDown(sec) : ((secI = t2 - ct) > 0) ? '<b>' + n + ' iqama</b> in: ' + countDown(secI) : ((stp = t3 - ct) >= 0) ? m : '');
 		if (stp < 0) {
 			clearInterval(countdown);
-			nextSalahIn(PT);
+			init(); // reload the timer and get the new details.
 		}
 	}, 1000);
-	// console.log(d);
-	if (d === 21) { // CONCAT i&j instead of adding.
-		init(); // get new day's time!
-	}
 }
 var init = function () {
-	var khateeb = "TBD", todayDate = new Date();
+	var PT, khateeb = 'TBD', todayDate = new Date();console.log(todayDate);
 	yesterDate.setDate(todayDate.getDate() - 1);
 	tomorrDate.setDate(todayDate.getDate() + 1);
 	jumuahDate.setDate(todayDate.getDate() + ((todayDate.getDay() < 6) ? (5 - todayDate.getDay()) : 6));
@@ -113,20 +109,6 @@ PT = [
 		IshaI: "10:00 PM",
 		Maghrib: "8:27 PM",
 		MaghribI: "8:32 PM",
-		SalahDate: "8/2/2015",
-		Sunrise: "6:41 AM"
-	},
-	{
-		Asr: "5:17 PM",
-		AsrI: "6:00 PM",
-		Dhuhr: "1:35 PM",
-		DhuhrI: "2:23 PM",
-		Fajr: "5:26 AM",
-		FajrI: "5:45 AM",
-		Isha: "9:00 PM",
-		IshaI: "10:30 PM",
-		Maghrib: "8:27 PM",
-		MaghribI: "8:32 PM",
 		SalahDate: "8/3/2015",
 		Sunrise: "6:41 AM"
 	},
@@ -134,14 +116,28 @@ PT = [
 		Asr: "5:17 PM",
 		AsrI: "6:00 PM",
 		Dhuhr: "1:35 PM",
+		DhuhrI: "2:23 PM",
+		Fajr: "12:10 AM",
+		FajrI: "12:14 AM",
+		Isha: "8:00 PM",
+		IshaI: "9:06 PM",
+		Maghrib: "8:27 PM",
+		MaghribI: "9:05 PM",
+		SalahDate: "8/4/2015",
+		Sunrise: "6:41 AM"
+	},
+	{
+		Asr: "5:17 PM",
+		AsrI: "6:00 PM",
+		Dhuhr: "1:35 PM",
 		DhuhrI: "1:45 PM",
-		Fajr: "5:26 AM",
-		FajrI: "5:45 AM",
+		Fajr: "12:01 AM",
+		FajrI: "12:02 AM",
 		Isha: "9:43 PM",
 		IshaI: "10:00 PM",
 		Maghrib: "8:27 PM",
 		MaghribI: "8:32 PM",
-		SalahDate: "8/4/2015",
+		SalahDate: "8/5/2015",
 		Sunrise: "6:51 AM"
 	}
 ];
@@ -153,15 +149,15 @@ PT = [
 		asr = salahRow(salahDate, PT[1]['AsrI']);
 		maghrib = salahRow(salahDate, PT[1]['MaghribI']);
 		isha = salahRow(salahDate, PT[1]['IshaI']);
-		html += '<tr><td class="timeofday">Fajr</td><td>' + tr(PT[fajr]['Fajr']) + '</td><td class="iqtime' + dateChange(PT[fajr - 1]['FajrI'], PT[fajr]['FajrI']) + '">' + tr(PT[fajr]['FajrI']) + '</td></tr>' +
-			'<tr><td class="timeofday">Sunrise</td><td>' + tr(PT[sunrise]['Sunrise']) + '</td><td>&nbsp;</td></tr>' +
-			'<tr><td class="timeofday">Dhuhr</td><td>' + tr(PT[dhuhr]['Dhuhr']) + '</td><td class="iqtime">' + tr(PT[dhuhr]['DhuhrI']) + '</td></tr>' +
-			'<tr><td class="timeofday">Asr</td><td>' + tr(PT[asr]['Asr']) + '</td><td class="iqtime' + dateChange(PT[asr - 1]['AsrI'], PT[asr]['AsrI']) + '">' + tr(PT[asr]['AsrI']) + '</td></tr>' +
-			'<tr><td class="timeofday">Maghrib</td><td>' + tr(PT[maghrib]['Maghrib']) + '</td><td class="iqtime">' + tr(PT[1]['MaghribI']) + '</td></tr>' +
-			'<tr><td class="timeofday">Isha</td><td>' + tr(PT[isha]['Isha']) + '</td><td class="iqtime' + dateChange(PT[isha - 1]['IshaI'], PT[isha]['IshaI']) + '">' + tr(PT[isha]['IshaI']) + '</td></tr>' +
+		html += '<tr><td class="timeofday">Fajr</td><td>' 	+ tr(PT[fajr]['Fajr']) 			+ '</td><td class="iqtime'		+ dateChange(PT[fajr - 1]['FajrI'], PT[fajr]['FajrI']) + '">' 	+ tr(PT[fajr]['FajrI']) + '</td></tr>' +
+			'<tr><td class="timeofday">Sunrise</td><td>' 	+ tr(PT[sunrise]['Sunrise']) 	+ '</td><td>&nbsp;</td></tr>' 	+
+			'<tr><td class="timeofday">Dhuhr</td><td>' 		+ tr(PT[dhuhr]['Dhuhr']) 		+ '</td><td class="iqtime">' 																	+ tr(PT[dhuhr]['DhuhrI']) + '</td></tr>' +
+			'<tr><td class="timeofday">Asr</td><td>' 		+ tr(PT[asr]['Asr']) 			+ '</td><td class="iqtime' 		+ dateChange(PT[asr - 1]['AsrI'], PT[asr]['AsrI']) + '">' 		+ tr(PT[asr]['AsrI']) + '</td></tr>' +
+			'<tr><td class="timeofday">Maghrib</td><td>' 	+ tr(PT[maghrib]['Maghrib']) 	+ '</td><td class="iqtime">' 																	+ tr(PT[maghrib]['MaghribI']) + '</td></tr>' +
+			'<tr><td class="timeofday">Isha</td><td>' 		+ tr(PT[isha]['Isha']) 			+ '</td><td class="iqtime' 		+ dateChange(PT[isha - 1]['IshaI'], PT[isha]['IshaI']) + '">' 	+ tr(PT[isha]['IshaI']) + '</td></tr>' +
 			'<tr><td class="timeofday">Jumuah</td><td>1:45</td><td>&nbsp</td></tr>' +
 			'<tr><td class="timeofday">Khateeb</td><td colspan="2"><div class="khateeb">' + khateeb + '</div></td></tr>';
-		jQuery('div.timing').html('<center><div class="nextSalahIn" id="nextSalahIn"></div></center><center><table id="salahtimes">' + html + '</table></center>');
+		jQuery('div.timing').html('<div class="nextSalahIn" id="nextSalahIn"></div><table id="salahtimes">' + html + '</table>');
 		nextSalahIn(PT);
 	});
 };
