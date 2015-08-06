@@ -116,20 +116,20 @@ var init = function () {
 		IshaI: "10:00 PM",
 		Maghrib: "8:27 PM",
 		MaghribI: "8:32 PM",
-		SalahDate: "8/4/2015",
+		SalahDate: printDate(yesterDate),
 		Sunrise: "6:41 AM"
 		},{
 		Asr: "5:17 PM",
 		AsrI: "6:00 PM",
-		Dhuhr: "1:35 PM",
-		DhuhrI: "2:23 PM",
+		Dhuhr: "7:17 AM",
+		DhuhrI: "7:21 AM",
 		Fajr: "12:10 AM",
 		FajrI: "12:14 AM",
 		Isha: "8:00 PM",
 		IshaI: "10:21 PM",
 		Maghrib: "8:27 PM",
 		MaghribI: "8:42 PM",
-		SalahDate: "8/5/2015",
+		SalahDate: printDate(todayDate),
 		Sunrise: "6:41 AM"
 		},{
 		Asr: "5:17 PM",
@@ -142,7 +142,7 @@ var init = function () {
 		IshaI: "10:00 PM",
 		Maghrib: "8:27 PM",
 		MaghribI: "8:32 PM",
-		SalahDate: "8/6/2015",
+		SalahDate: printDate(tomorrDate) ,
 		Sunrise: "6:51 AM"
 		}
 		];
