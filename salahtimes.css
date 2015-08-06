@@ -1,0 +1,59 @@
+.nextSalahIn {
+	color:#fff;
+	text-align:center;
+	font-variant: small-caps;
+	text-shadow:1px 1px 1px #ccc;
+	font-size: 16px;
+}
+.nextSalahIn > b {
+	font-weight: bold;
+	text-transform: uppercase;
+	padding:3px;
+}
+.salahtimes {
+	width: 150px;
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0 auto;
+	border-spacing: 0;
+	border: 0;
+}
+.salahtimes > tr:nth-child(odd) {
+
+}
+.salahtimes > tr:nth-child(even) {
+	background-color:rgba(225, 225, 225, .3);
+}
+.salahtimes > tr:hover {
+	background-color:#008eba;
+}
+.salahtimes td {
+	color:#fff;
+	text-align: right;
+	width: 33%;
+	margin: 0;
+	border:0;
+	padding:0 5px;
+	font-size:15px;
+	font-family:Arial;
+	white-space:nowrap;
+	vertical-align:middle;
+	font-variant: small-caps;
+	text-shadow:0px 0px 0px #ccc;
+}
+.timeofday {
+
+}
+.iqtime {
+	padding-right:10px;
+}
+.changed {
+	font-size:120%;
+	font-weight:bold;
+	text-shadow:1px 1px 1px #000;
+}
+.khateeb {
+	color:#fff;
+	text-align: left;
+	width: 79px;
+}
