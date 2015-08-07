@@ -54,15 +54,13 @@ function timeLeft(t1, t2, t3, n) {
 	msg = jQuery('.nextSalahIn');
 	countdown = setInterval(function () {
 			ct = Date.now();
-			msg.html(((sec = t1 - ct) > 0) ? n + ' in: ' + countDown(sec) : ((secI = t2 - ct) > 0) ? '<b>' + n + ' iqama</b> in: ' + countDown(secI) : ((stp = t3 - ct) >= 0) ? m : '');
-			// declaring init() as the last statement for the condition did not execute in mobile Safari browser.
+			msg.html(((sec = t1 - ct) > 0) ? n + ' in: ' + countDown(sec) : ((secI = t2 - ct) > 0) ? '<b>' + n + ' iqama</b> in: ' + countDown(secI) : ((stp = t3 - ct) >= 0) ? m : clearInterval(countdown));
 			if (stp < 0) {
-				init(); // reload the timer and get the new details.
-				clearInterval(countdown);
+				initSalah(); // restart
 			}
 		}, 1000);
 }
-var init = function () {
+var initSalah = function () {
 	var PT,
 	khateeb = 'TBD',
 	todayDate = new Date();
@@ -162,14 +160,14 @@ var init = function () {
 		'<tr><td class="timeofday">Isha</td><td>' + tr(PT[isha]['Isha']) + '</td><td class="iqtime' + dateChange(PT[isha - 1]['IshaI'], PT[isha]['IshaI']) + '">' + tr(PT[isha]['IshaI']) + '</td></tr>' +
 		'<tr><td class="timeofday">Jumuah</td><td>1:45</td><td>&nbsp</td></tr>' +
 		'<tr><td class="timeofday">Khateeb</td><td colspan="2"><div class="khateeb">' + khateeb + '</div></td></tr>';
-		jQuery('div.timing').html('<div class="nextSalahIn"></div><table class="salahtimes">' + html + '</table>');
+		jQuery('.timing').html('<div class="nextSalahIn"></div><table class="salahtimes">' + html + '</table>');
 		nextSalahIn(PT);
 	}).fail(function () {
-		jQuery('div.timing').html('An error occurred retrieving salah times.');
+		jQuery('.timing').html('An error occurred retrieving salah times.');
 	});
 };
 (function ($) {
-	$('div.timing').html('<div id="salahtimes">Loading prayer times...</div>');
-	init();
+	$('.timing').html('<div class="salahtimes">Loading prayer times...</div>');
+	initSalah();
 }
 	(jQuery));
