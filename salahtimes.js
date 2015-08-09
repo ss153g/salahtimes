@@ -161,6 +161,8 @@ var initSalah = function () {
 		'<tr><td class="timeofday">Jumuah</td><td>1:45</td><td>&nbsp</td></tr>' +
 		'<tr><td class="timeofday">Khateeb</td><td colspan="2"><div class="khateeb">' + khateeb + '</div></td></tr>';
 		jQuery('.timing').html('<div class="nextSalahIn"></div><table class="salahtimes">' + html + '</table>');
+		// show the timer below the VRIC logo
+		jQuery('.website-logo a').append('<div class="nextSalahIn nextSalahIn-menu"></div>');		
 		nextSalahIn(PT);
 	}).fail(function () {
 		jQuery('.timing').html('An error occurred retrieving salah times.');
@@ -171,3 +173,5 @@ var initSalah = function () {
 	initSalah();
 }
 	(jQuery));
+// jQuery('.nextSalahIn').each(function(index){console.log(jQuery(this).offset());})
+// http://stackoverflow.com/questions/3714628/jquery-get-the-location-of-an-element-relative-to-window

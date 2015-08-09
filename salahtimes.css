@@ -2,8 +2,9 @@
 	color:#fff !important;
 	text-align:center;
 	font-variant: small-caps;
-	text-shadow:1px 1px 1px #000;
+	text-shadow:1px 1px 1px #ccc;
 	font-size: 16px;
+	font-family: Arial;
 }
 .nextSalahIn > b {
 	font-weight: bold;
@@ -35,7 +36,7 @@
 	border:0 !important;
 	padding:0 5px;
 	font-size:15px;
-	font-family:Arial;
+	font-family: Arial;
 	white-space:nowrap;
 	vertical-align:middle;
 	font-variant: small-caps;
@@ -48,12 +49,31 @@
 	padding-right:10px;
 }
 .changed {
-	font-size:120%;
+	color: #ff0 !important;
+	font-size:120% !important;
+	text-shadow:1px 1px 1px #000 !important;
 	font-weight:bold;
-	text-shadow:1px 1px 1px #000;
 }
 .khateeb {
 	color:#fff !important;
 	text-align: left;
 	width: 79px;
+}
+.nextSalahIn-menu {
+	display: none;
+}
+@media only screen and (max-width: 1100px) {
+	.nextSalahIn-menu {
+		display: block;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		font-variant: small-caps;
+		text-shadow:1px 1px 1px #ccc;
+		font-size: 16px;
+		font-family: Raleway, Arial;
+		color: #666 !important;
+		white-space: nowrap;
+		overflow-x: visible;
+	}
 }
